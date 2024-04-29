@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Politieke Spelletjes</title>
+    <style>
+        h1 {
+            font-size: 36px; 
+        }
+        body {
+            background-color: white;
+            font-family: Roboto, sans-serif;
+            text-align: center;
+            padding: 20px;
+            transition: background-color 0.5s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            position: relative;
+        }
+        .button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #5200ff;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            font-size: calc(10px + 1.5vmin);
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        .button:hover {
+            transform: scale(1.1);
+        }
+        #timer-svg {
+            width: 80vw;
+            max-width: 300px;
+            height: auto;
+        }
+        #info-button {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        #overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            padding: 20px;
+        }
+        .close-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 24px;
+            cursor: pointer;
+        }
+    </style>
+    <script>
+        
+        let timeLeft = 30;
+        let totalSeconds = 30;
+        let timerInterval = null;
+
+        function toggleOverlay() {
+            const overlay = document.getElementById('overlay');
+            overlay.style.display = overlay.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        function getRandomAssignment() {
+            const assignments = [
+                 "Waar vind jij informatie over politiek en verkiezingen?",
+                    "Geef 1 beleidsdomein waar de Federale regering bevoegdheid over heeft.",
+                    "Noem alle verkiezingen die in 2024 gebeuren in dertig seconden.",
+                    "Wat is het verschil tussen blanco en ongeldig stemmen? Bonuspunt als je dit kan uitleggen zoals een YouTube-vlogger.", 
+                    "Geef 1 beleidsdomein waar de Vlaamse regering bevoegdheid over heeft.", 
+                    "Geef 1 aanpassing van het Europees parlement die ons leven beïnvloedt.", 
+                    "Wat is het verschil tussen opkomstplicht en stemrecht? Bonuspunt als je dit kan uitleggen in een andere taal.", 
+                    "Ga jij stemmen? Waarom wel of waarom niet?", 
+                    "Som drie manieren op waarop jij jouw mening kan uiten. Bonuspunt als je dit kan laten rijmen.", 
+                    "Haal 1 social media post van een politicus uit jouw geheugen. Waarover ging die post? Waarom bleef die jou bij?",
+                    "Deed je reeds een stemtest? Zo ja, kwam dit resultaat overeen met jouw verwachtiingen?", 
+                    "Welke stemtest vond je de beste? Geef twee argumenten.", 
+                    "Wie is volgens jou de meest populaire politicus? Geef 1 argument om jouw mening te onderbouwen.", 
+                    "Wie is volgens jou de beste politicus? Geef 1 argument om jouw mening te onderbouwen.",
+                    "Je beste vriend(in) zal blanco stemmen. Hoe ga je hiermee om?", 
+                    "Je beste vriend(in) zal op een partij stemmen waar jij nooit op zou stemmen. Hoe ga je hiermee om?", 
+                    "Je ouder(s) zullen op een volledig andere partij stemmen dan jij. Hoe ga je hiermee om?", 
+                    "Noem drie ministers op uit de huidige Vlaamse regering.",
+                    "Noem drie ministers op uit de huidige Federale regering.", 
+                    "Hoe heet de Vlaamse Minister-President? Bonuspunt als je de partij kan opnoemen. Bonus-bonuspunt als je de voorganger kan opnoemen.", 
+                    "Hoe heet de Eerste Minister / Premier? Bonuspunt als je de partij kan opnoemen. Bonus-bonuspunt als je de voorganger kan opnoemen.", 
+                    "Hoe heet de voorzitter van de Europese Commissie?", 
+                    "Eens of oneens? Als je rijdt, mag je helemaal geen alcohol gedronken hebben.", 
+                    "Eens of oneens? De volgende regering moet een nieuwe kerncentrale bouwen.", 
+                    "Eens of oneens? Er moeten meer bushaltes komen, ook op plaaten waar weinig mensen opstappen.", 
+                    "Eens of oneens? Wie een levenslange celstraf krijgt, mag nooit vervroegd vrijkomen.", 
+                    "Eens of oneens? De EU moet ervoor zorgen dat meer mensen veilig naar de EU kunnen migreren.", 
+                    "Eens of oneens? Ook na 2035 moet je nog een benzine of dieselwagen kunnen kopen.", 
+                    "Eens of oneens? Veranderen van geslacht moet verboden worden voor wie nog geen 18 jaar is.", 
+                    "Eens of oneens? De overheid mag geen nieuwe moskeeën erkennen.", 
+                    "Eens of oneens? De overheid moet de banken verplichten om de rente op spaarboekjes te verhogen.", 
+                    "Eens of oneens? Je moet meer belastingen betalen op korte vliegtuigreizen.", 
+                    "Eens of oneens? De politie mag camera's met gezichtsherkenning gebruiken.", 
+                    "Eens of oneens? Abortus moet toegelaten worden tot 18 weken zwangerschap.", 
+                    "Eens of oneens? Ouders van spijbelaars moeten hun kinderbijslag verliezen.", 
+                    "Eens of oneens? De schoolvakantie in de zomer moet korter, andere vakanties langer.", 
+                    "Eens of oneens? Priesters en imams mogen niet langer met belastinggeld betaald worden.", 
+                    "Eens of oneens? Het gebruik van cannabis moet wettelijk toegelaten worden.", 
+                    "Eens of oneens? Je moet onbeperkt kunnen werken als jobstudent.", 
+                    "Eens of oneens? Vanaf 16 jaar moet je kunnen stemmen voor alle verkiezingen.", 
+                    "Eens of oneens? De kernwapens in ons land moeten weg.", 
+                    "Eens of oneens? In middelbare scholen moeten gratis menstruatieproducten beschikbaar zijn.", 
+                    "Eens of oneens? Leerlingen in de lagere school moeten gratis warme maaltijden krijgen.", 
+                    "Eens of oneens? Er moet een rookverbod komen op terrassen van cafés.", 
+                    "Eens of oneens? Oekraïne moet lid worden van de EU.", 
+                    "Eens of oneens? Werklozen moeten hun uitkering na twee jaar verliezen.", 
+                    "Eens of oneens? Leerkrachten mogen voor de klas een hoofddoek dragen." 
+                
+            ];
+            const index = Math.floor(Math.random() * assignments.length);
+            document.getElementById("assignment").textContent = assignments[index];
+            resetTimer();
+        }
+
+function resetTimer() {
+            if (timerInterval !== null) clearInterval(timerInterval);
+            document.body.style.backgroundColor = "white";
+            timeLeft = totalSeconds;
+            const timerElement = document.getElementById("timer");
+            const radius = 45;
+            const circumference = 2 * Math.PI * radius;
+            timerElement.style.strokeDasharray = `${circumference}`;
+            timerElement.style.strokeDashoffset = `${circumference}`;
+            document.getElementById("time-text").textContent = "30 seconden";
+            playSound('tick', false); // Ensure the ticking sound stops when resetting
+        }
+
+        function startTimer() {
+            if (timerInterval !== null) clearInterval(timerInterval);
+            timeLeft = totalSeconds;
+            playSound('tick', true); // Start the ticking sound right as the timer starts
+            timerInterval = setInterval(function() {
+                timeLeft--;
+                if (timeLeft >= 0) {
+                    updateTimer();
+                } else {
+                    clearInterval(timerInterval);
+                    document.getElementById("time-text").textContent = "Tijd is op!";
+                    playSound('tick', false); // Stop the ticking sound when the timer runs out
+                    playSound('alarm'); // Play the alarm sound when time's up
+                }
+            }, 1000);
+        }
+
+        function updateTimer() {
+            const timerElement = document.getElementById("timer");
+            const radius = 45;
+            const circumference = 2 * Math.PI * radius;
+            let offset = circumference - (timeLeft / totalSeconds) * circumference;
+            timerElement.style.strokeDashoffset = offset;
+            document.getElementById("time-text").textContent = timeLeft + " seconden";
+            if (timeLeft <= 10 && timeLeft > 0) {
+                document.body.style.backgroundColor = "red";
+            } else {
+                document.body.style.backgroundColor = "white";
+            }
+        }
+
+        function playSound(sound, loop=false) {
+            const tickSound = document.getElementById('tick-sound');
+            const alarmSound = document.getElementById('alarm-sound');
+            if (sound === 'tick') {
+                if (loop) {
+                    tickSound.loop = true;
+                    tickSound.play();
+                } else {
+                    tickSound.pause();
+                    tickSound.currentTime = 0;
+                }
+            } else if (sound === 'alarm') {
+                alarmSound.play();
+            }
+        }
+
+        window.onload = function() {
+            getRandomAssignment();
+        };
+    </script>
+</head>
+<body>
+    <h1>Politieke Spelletjes</h1>
+    <div id="assignment" style="margin: 20px; font-size: 28px;"></div>
+    <svg id="timer-svg">
+        <circle id="timer" r="45" cx="50" cy="50" fill="transparent" stroke="#5200ff" stroke-width="4"/>
+        <text id="time-text" x="50%" y="50%" alignment-baseline="central" text-anchor="middle" font-size="16">30 seconden</text>
+    </svg>
+    <button class="button" onclick="startTimer()">Start Timer</button>
+    <button class="button" onclick="getRandomAssignment()">Volgende Opgave</button>
+    <div id="info-button" class="button" onclick="toggleOverlay()">?</div>
+    <div id="overlay">
+        <span class="close-button" onclick="toggleOverlay()">X</span>
+            <h2>Spelregels</h2>
+            <p>
+            De eerste speler start het spel door de opgave hardop voor te lezen.
+            <br>
+            Deze speler duid daarna een andere speler aan. Die moet de opgave uitvoeren.
+            <br>
+            Start de klok! Je krijgt maar dertig seconden om jouw opdracht uit te voeren!
+            <br>
+            Gelukt? Dan geef je het device door aan de persoon die de opdracht uitvoerde.
+            <br>
+            </p>
+    </div>
+    <audio id="tick-sound" src="tick.mp3"></audio>
+    <audio id="alarm-sound" src="alarm.mp3"></audio>
+</body>
+</html>
