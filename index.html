@@ -36,11 +36,16 @@
         .button:hover {
             transform: scale(1.1);
         }
+    #timer-svg {
+        width: 75vw; /* Adjusted from 80vw to 75vw */
+        max-width: 300px;
+        height: auto;
+    }
+    @media (max-width: 360px) { /* Assuming iPhone Mini screen width */
         #timer-svg {
-            width: 80vw;
-            max-width: 300px;
-            height: auto;
+            width: 70vw; /* Smaller width for very small screens */
         }
+    }
         #info-button {
             position: absolute;
             top: 20px;
@@ -205,9 +210,9 @@ function resetTimer() {
 <body>
     <h1>Politieke Spelletjes</h1>
     <div id="assignment" style="margin: 20px; font-size: 28px;"></div>
-<svg id="timer-svg" viewBox="0 0 100 100" width="80vw" style="max-width: 300px; height: auto;">
+<svg id="timer-svg" viewBox="0 0 100 100" style="max-width: 300px; height: auto;">
     <circle id="timer" r="45" cx="50" cy="50" fill="transparent" stroke="#5200ff" stroke-width="4"/>
-    <text id="time-text" x="50%" y="55%" alignment-baseline="middle" text-anchor="middle" font-size="16">30 seconden</text>
+    <text id="time-text" x="50%" y="50%" alignment-baseline="middle" text-anchor="middle" font-size="16">30 seconden</text>
 </svg>
     <button class="button" onclick="startTimer()">Start Timer</button>
     <button class="button" onclick="getRandomAssignment()">Volgende Opgave</button>
