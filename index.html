@@ -205,10 +205,10 @@ function resetTimer() {
 <body>
     <h1>Politieke Spelletjes</h1>
     <div id="assignment" style="margin: 20px; font-size: 28px;"></div>
-    <svg id="timer-svg">
-        <circle id="timer" r="45" cx="50" cy="50" fill="transparent" stroke="#5200ff" stroke-width="4"/>
-        <text id="time-text" x="50%" y="50%" alignment-baseline="central" text-anchor="middle" font-size="16">30 seconden</text>
-    </svg>
+<svg id="timer-svg" viewBox="0 0 100 100" width="80vw" style="max-width: 300px; height: auto;">
+    <circle id="timer" r="45" cx="50" cy="50" fill="transparent" stroke="#5200ff" stroke-width="4"/>
+    <text id="time-text" x="50%" y="55%" alignment-baseline="middle" text-anchor="middle" font-size="16">30 seconden</text>
+</svg>
     <button class="button" onclick="startTimer()">Start Timer</button>
     <button class="button" onclick="getRandomAssignment()">Volgende Opgave</button>
     <div id="info-button" class="button" onclick="toggleOverlay()">?</div>
