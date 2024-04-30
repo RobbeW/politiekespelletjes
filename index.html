@@ -41,9 +41,9 @@
         max-width: 300px;
         height: auto;
     }
-    @media (max-width: 360px) { /* Assuming iPhone Mini screen width */
+    @media (max-width: 360px) { 
         #timer-svg {
-            width: 70vw; /* Smaller width for very small screens */
+            width: 70vw; 
         }
     }
         #info-button {
@@ -91,7 +91,7 @@
                  "Waar vind jij informatie over politiek en verkiezingen?",
                     "Geef 1 beleidsdomein waar de Federale regering bevoegdheid over heeft.",
                     "Noem alle verkiezingen die in 2024 gebeuren in dertig seconden.",
-                    "Wat is het verschil tussen blanco en ongeldig stemmen? Bonuspunt als je dit kan uitleggen zoals een YouTube-vlogger.", 
+                    "Wat is het verschil tussen blanco en ongeldig stemmen? Leg dit kort en bondig uit!", 
                     "Geef 1 beleidsdomein waar de Vlaamse regering bevoegdheid over heeft.", 
                     "Geef 1 aanpassing van het Europees parlement die ons leven beïnvloedt.", 
                     "Wat is het verschil tussen opkomstplicht en stemrecht? Bonuspunt als je dit kan uitleggen in een andere taal.", 
@@ -157,13 +157,13 @@ function resetTimer() {
             timerElement.style.strokeDasharray = `${circumference}`;
             timerElement.style.strokeDashoffset = `${circumference}`;
             document.getElementById("time-text").textContent = "30 seconden";
-            playSound('tick', false); // Ensure the ticking sound stops when resetting
+            playSound('tick', false); 
         }
 
         function startTimer() {
             if (timerInterval !== null) clearInterval(timerInterval);
             timeLeft = totalSeconds;
-            playSound('tick', true); // Start the ticking sound right as the timer starts
+            playSound('tick', true); 
             timerInterval = setInterval(function() {
                 timeLeft--;
                 if (timeLeft >= 0) {
@@ -171,8 +171,8 @@ function resetTimer() {
                 } else {
                     clearInterval(timerInterval);
                     document.getElementById("time-text").textContent = "Tijd is op!";
-                    playSound('tick', false); // Stop the ticking sound when the timer runs out
-                    playSound('alarm'); // Play the alarm sound when time's up
+                    playSound('tick', false); 
+                    //playSound('alarm'); 
                 }
             }, 1000);
         }
@@ -234,9 +234,9 @@ function resetTimer() {
             <br>
             Gelukt? Dan geef je het device door aan de persoon die de opdracht uitvoerde.
             <br>
-            Je mag maximaal drie keer passen. 
+            Elke speler mag maximaal drie keer passen. 
             <br>
-            Niet terugtikken! Je geeft de vraag niet terug aan de speler de hem aan jou gaf.
+            Niet terugtikken! Je geeft de vraag dus niet terug aan de speler de hem net aan jou gaf.
             <br>
             </p>
     </div>
