@@ -5,9 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Politieke Spelletjes</title>
     <style>
-        h1 {
-            font-size: 36px; 
-        }
         body {
             background-color: white;
             font-family: Roboto, sans-serif;
@@ -36,30 +33,28 @@
         .button:hover {
             transform: scale(1.1);
         }
-    #timer-svg {
-        width: 75vw; /* Adjusted from 80vw to 75vw */
-        max-width: 300px;
-        height: auto;
-    }
-    @media (max-width: 360px) { /* Assuming iPhone Mini screen width */
         #timer-svg {
-            width: 70vw; /* Smaller width for very small screens */
+            width: 80vw;
+            max-width: 300px;
+            height: auto;
         }
-    }
-        #info-button {
+        #info-button, #tip-button {
             position: absolute;
-            bottom: 20px;
+            top: 20px;
             right: 20px;
-            font-size: 20px;
+            font-size: 24px;
             cursor: pointer;
         }
-        #overlay {
+        #tip-button {
+            right: 80px; /* Adjust position so it does not overlap info button */
+        }
+        #overlay, #tip-overlay {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.9);
+            background: rgba(0, 0, 0, 0.8);
             display: none;
             flex-direction: column;
             align-items: center;
@@ -142,12 +137,23 @@
                     "Ik wil meehelpen het tellen van de stemmen bij de verkiezingen."
                 
             ];
-            const index = Math.floor(Math.random() * assignments.length);
-            document.getElementById("assignment").textContent = assignments[index];
+                  function toggleOverlay(id) {
+            const overlay = document.getElementById(id);
+            overlay.style.display = overlay.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        function getRandomAssignment() {
+            currentAssignmentIndex = Math.floor(Math.random() * assignments.length);
+            document.getElementById("assignment").textContent = assignments[currentAssignmentIndex].text;
             resetTimer();
         }
 
-function resetTimer() {
+        function showTip() {
+            document.getElementById("tip-text").textContent = assignments[currentAssignmentIndex].tip;
+            toggleOverlay('tip-overlay');
+        }
+
+        function resetTimer() {
             if (timerInterval !== null) clearInterval(timerInterval);
             document.body.style.backgroundColor = "white";
             timeLeft = totalSeconds;
@@ -157,22 +163,22 @@ function resetTimer() {
             timerElement.style.strokeDasharray = `${circumference}`;
             timerElement.style.strokeDashoffset = `${circumference}`;
             document.getElementById("time-text").textContent = "30 seconden";
-            playSound('tick', false); // Ensure the ticking sound stops when resetting
+            playSound('tick', false);
         }
 
         function startTimer() {
             if (timerInterval !== null) clearInterval(timerInterval);
             timeLeft = totalSeconds;
-            playSound('tick', true); // Start the ticking sound right as the timer starts
+            playSound('tick', true);
             timerInterval = setInterval(function() {
                 timeLeft--;
                 if (timeLeft >= 0) {
                     updateTimer();
                 } else {
                     clearInterval(timerInterval);
-                    document.getElementById("time-text").textContent = "Tijd is op!";
-                    playSound('tick', false); // Stop the ticking sound when the timer runs out
-                    playSound('alarm'); // Play the alarm sound when time's up
+                    document.getElementById("time-text").textContent = "Time's up!";
+                    playSound('tick', false);
+                    playSound('alarm');
                 }
             }, 1000);
         }
@@ -214,17 +220,18 @@ function resetTimer() {
 </head>
 <body>
     <h1>Politieke Spelletjes</h1>
-    <div id="assignment" style="margin: 20px; font-size: 28px;"></div>
-<svg id="timer-svg" viewBox="0 0 100 100" style="max-width: 300px; height: auto;">
-    <circle id="timer" r="45" cx="50" cy="50" fill="transparent" stroke="#5200ff" stroke-width="4"/>
-    <text id="time-text" x="50%" y="50%" alignment-baseline="middle" text-anchor="middle" font-size="16">30 seconden</text>
-</svg>
+    <div id="assignment" style="margin: 20px; font-size: 20px;"></div>
+    <svg id="timer-svg">
+        <circle id="timer" r="45" cx="50" cy="50" fill="transparent" stroke="#5200ff" stroke-width="4"/>
+        <text id="time-text" x="50%" y="50%" alignment-baseline="middle" text-anchor="middle" font-size="16">30 seconden</text>
+    </svg>
     <button class="button" onclick="startTimer()">Start Timer</button>
     <button class="button" onclick="getRandomAssignment()">Volgende Opgave</button>
-    <div id="info-button" class="button" onclick="toggleOverlay()">?</div>
+    <button id="tip-button" class="button" onclick="showTip()">Geef een tip</button>
+    <div id="info-button" class="button" onclick="toggleOverlay('overlay')">?</div>
     <div id="overlay">
-        <span class="close-button" onclick="toggleOverlay()">X</span>
-            <h2>Spelregels</h2>
+        <span class="close-button" onclick="toggleOverlay('overlay')">X</span>
+        <h2>Spelregels</h2>
             <p>
             De eerste speler start het spel door de opgave hardop voor te lezen.
             <br>
